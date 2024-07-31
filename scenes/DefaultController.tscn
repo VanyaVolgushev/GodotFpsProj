@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://blw7p8ke2ux8a"]
+
+[ext_resource type="Script" path="res://scripts/default_controller.cs" id="1_b7tqf"]
+[ext_resource type="Script" path="res://scripts/LinearMountInterpolator.cs" id="2_061gj"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ts4xn"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_kqh0g"]
+
+[node name="puppet2" type="CharacterBody3D" node_paths=PackedStringArray("HorizontalDirAxis", "VerticalDirAxis")]
+script = ExtResource("1_b7tqf")
+HorizontalDirAxis = NodePath("LinearMount/HorizontalDirAxis")
+VerticalDirAxis = NodePath("LinearMount/HorizontalDirAxis/VerticalDirAxis")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_ts4xn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_kqh0g")
+skeleton = NodePath("../..")
+
+[node name="LinearMount" type="Node3D" parent="." node_paths=PackedStringArray("TargetNode")]
+script = ExtResource("2_061gj")
+TargetNode = NodePath("../LinearMountTarget")
+
+[node name="HorizontalDirAxis" type="Node3D" parent="LinearMount"]
+
+[node name="VerticalDirAxis" type="Node3D" parent="LinearMount/HorizontalDirAxis"]
+
+[node name="Camera3D" type="Camera3D" parent="LinearMount/HorizontalDirAxis/VerticalDirAxis"]
+fov = 90.0
+
+[node name="LinearMountTarget" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.669626, 0)

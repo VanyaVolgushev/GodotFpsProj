@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3 uid="uid://crqwm7jgssth5"]
+
+[ext_resource type="Script" path="res://scripts/Puppet.cs" id="1_w6hyi"]
+[ext_resource type="Script" path="res://scripts/LinearMountInterpolator.cs" id="2_xq8lf"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ts4xn"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rqgqw"]
+albedo_color = Color(0.82, 0.1558, 0.21115, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_kqh0g"]
+material = SubResource("StandardMaterial3D_rqgqw")
+
+[node name="Puppet" type="RigidBody3D" node_paths=PackedStringArray("HorizontalDirAxis", "VerticalDirAxis", "Camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0119, 0)
+script = ExtResource("1_w6hyi")
+HorizontalDirAxis = NodePath("LinearMount/HorizontalDirAxis")
+VerticalDirAxis = NodePath("LinearMount/HorizontalDirAxis/VerticalDirAxis")
+Camera = NodePath("LinearMount/HorizontalDirAxis/VerticalDirAxis/Camera3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_ts4xn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_kqh0g")
+skeleton = NodePath("../..")
+
+[node name="LinearMount" type="Node3D" parent="." node_paths=PackedStringArray("TargetNode")]
+script = ExtResource("2_xq8lf")
+TargetNode = NodePath("../LinearMountTarget")
+
+[node name="HorizontalDirAxis" type="Node3D" parent="LinearMount"]
+
+[node name="VerticalDirAxis" type="Node3D" parent="LinearMount/HorizontalDirAxis"]
+
+[node name="Camera3D" type="Camera3D" parent="LinearMount/HorizontalDirAxis/VerticalDirAxis"]
+fov = 90.0
+
+[node name="LinearMountTarget" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.669626, 0)

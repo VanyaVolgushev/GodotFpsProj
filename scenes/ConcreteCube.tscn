@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://dx4dpu6q46pd5"]
+
+[ext_resource type="Material" uid="uid://c78gakcmmwffp" path="res://assets/Materials/Concrete1/concrete1.tres" id="1_ve8dp"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_gqwna"]
+material = ExtResource("1_ve8dp")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3dnk1"]
+
+[node name="RigidBody3D" type="RigidBody3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = ExtResource("1_ve8dp")
+mesh = SubResource("BoxMesh_gqwna")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_3dnk1")
