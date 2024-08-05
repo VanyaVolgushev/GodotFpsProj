@@ -6,9 +6,10 @@ using Godot;
 
 public static class CustomMath
 {
-    public static Vector3 SlideAlongMultiple(Vector3 translation, List<Vector3> collisionNormals, float ParallelismTolerance)
+    public static Vector3 SlideAlongMultiple(Vector3 translation, List<Vector3> collisionNormals, float ParallelismTolerance, float TranslationCutoff)
 	{
 		
+			
 		if(collisionNormals.Count == 0)
 		{
 			throw new Exception("normal list was empty");
@@ -49,11 +50,28 @@ public static class CustomMath
 				GD.Print("ERROR: moving neither outside nor inside crease");
 				return Vector3.Zero;
 			}
-        }
-		else
-		{
-			return Vector3.Zero;
 		}
+		return Vector3.Zero;
+		
+		/*
+		float totalDotSum = 0;
+		if(collisionNormals.Count == 0)
+		{
+			throw new Exception("normal list was empty");
+		}
+		foreach(Vector3 normal in collisionNormals)
+		{
+			totalDotSum += normal.Dot(-translation.Normalized());
+			GD.Print(new Vector2(1,-1).Project(new Vector2(0,1)));
+		}
+		foreach(Vector3 normal in collisionNormals)
+		{
+			Vector3 counterTranslation = -translation.Project(normal);
+			float coeff = counterTranslation.Normalized().Dot(-translation.Normalized());
+			translation += counterTranslation * coeff  / totalDotSum;
+		}
+		return translation;
+		*/
 	}
 	public static (Vector3 toSurface, Vector3 projectedLeftOver) MoveAndSlide(Vector3 translation, Vector3 collisionNormal, float collisionSafeFraction)
 	{

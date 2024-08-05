@@ -68,4 +68,5 @@ breakpoint={
 
 [physics]
 
+common/physics_ticks_per_second=30
 common/size/mode=3

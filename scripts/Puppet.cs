@@ -9,9 +9,10 @@ public partial class Puppet : RigidBody3D
 	float Gravity {get;} = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 	const float JumpVelocity = 6.0f;
 	const float Speed = 10.0f;
-	const int MaxCollideAndSlideBounces = 10;
+	const int MaxCollideAndSlideBounces = 20;
 	const int MaxNudgesOutsideColliders = 10;
-	public const float ParallelismTolerance = 0.001f;
+	public const float ParallelismTolerance = 0; // if sin of angles between two vectors is less than this, they are considered parallel
+	public const float TranslationCutoff = 1e-10f; // if velocity is less than this, puppet will not move
 	const float SkinWidthMultiplier = 0.015f; // when moving to the surface of an object, puppet will be put inside of it by this much 
 
 	[Export] public Node3D HorizontalDirAxis {get; set;}
@@ -69,7 +70,7 @@ public partial class Puppet : RigidBody3D
 		return velocity + Gravity * new Vector3(0, -1, 0) * (float)delta;
 	}
 	// only supports convex colliders
-	Vector3 CollideAndSlideIteration(Vector3 fromGlobal, Vector3 translation, List<GodotObject> collisionExceptions, int depth)
+	Vector3 CollideAndSlideIteration(Vector3 fromGlobal, Vector3 translation, int depth)
 	{
 		if(depth > MaxCollideAndSlideBounces || translation == Vector3.Zero)
 		{
@@ -79,12 +80,12 @@ public partial class Puppet : RigidBody3D
 			return translation;
 		}
 
-		if(SelfCaster.CastExcept(collisionExceptions, fromGlobal, translation))
+		if(SelfCaster.Cast(fromGlobal, translation))
 		{
 			// collision along path
 			float firstCastFraction = SelfCaster.GetClosestCollisionSafeFraction();
 			Vector3 firstCastNormal = SelfCaster.GetCollisionNormal(0);
-			if(SelfCaster.CastExcept(collisionExceptions, fromGlobal, Vector3.Zero))
+			if(SelfCaster.Cast(fromGlobal, Vector3.Zero))
 			{
 				// we are inside something
 				List<Vector3> intersectingObjectNormals = new();
@@ -92,7 +93,7 @@ public partial class Puppet : RigidBody3D
 				for(int i = 0; i < SelfCaster.GetCollisionCount(); i++)
 				{
 					Vector3 normal = SelfCaster.GetCollisionNormal(i);
-					if(normal.Dot(translation) <= ParallelismTolerance)
+					if(normal.Dot(translation.Normalized()) <= -ParallelismTolerance)
 					{
 						intersectingObjectNormals.Add(normal);
 						intersectingObjects.Add(SelfCaster.GetCollider(i));
@@ -104,28 +105,31 @@ public partial class Puppet : RigidBody3D
 					// and moving away or along it
 					// ignore it and move
 					(Vector3 toSurface, Vector3 projected) = CustomMath.MoveAndSlide(translation, firstCastNormal, firstCastFraction);
-					return toSurface + CollideAndSlideIteration(fromGlobal + toSurface, projected, new List<GodotObject>(), depth + 1);
+					DebugLabel.Text += "moving away or along\n";
+					return toSurface + CollideAndSlideIteration(fromGlobal + toSurface, projected, depth + 1);
 				}
 				else
 				{
 					// and moving towards it
 					// collide with it and recurse 
-
-					Vector3 projected = CustomMath.SlideAlongMultiple(translation, intersectingObjectNormals, ParallelismTolerance);
-					return CollideAndSlideIteration(fromGlobal, projected, new List<GodotObject>(), depth + 1);
+					DebugLabel.Text += "moving towards\n";
+					Vector3 projected = CustomMath.SlideAlongMultiple(translation, intersectingObjectNormals, ParallelismTolerance, TranslationCutoff);
+					return CollideAndSlideIteration(fromGlobal, projected, depth + 1);
 				}
 			}
 			else
 			{
 				// we are not inside anything
 				// collide with first object and recurse
+				DebugLabel.Text += "not inside, obstacle in way\n";
 				(Vector3 toSurface, Vector3 projected) = CustomMath.MoveAndSlide(translation, firstCastNormal, firstCastFraction);
-				return toSurface + CollideAndSlideIteration(fromGlobal + toSurface, projected, new List<GodotObject>(), depth + 1);
+				return toSurface + CollideAndSlideIteration(fromGlobal + toSurface, projected, depth + 1);
 			}
 		}
 		else
 		{
 			// no obstacles
+			DebugLabel.Text += "no obstacles\n";
 			return translation;
 		}
 	}
@@ -142,7 +146,7 @@ public partial class Puppet : RigidBody3D
 		Velocity = AdjustVelocityToGravity(Velocity, delta);
 		Vector3 translation = Velocity * (float)delta;
 		timesMovedAway = 0;
-		translation = CollideAndSlideIteration(GlobalPosition, translation, new List<GodotObject>(), 1);
+		translation = CollideAndSlideIteration(GlobalPosition, translation, 1);
 		Position += translation;
 		Velocity = translation / (float)delta;
 
