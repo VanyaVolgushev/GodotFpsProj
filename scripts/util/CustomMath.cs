@@ -6,50 +6,62 @@ using Godot;
 
 public static class CustomMath
 {
-    public static Vector3 SlideAlongMultiple(Vector3 translation, List<Vector3> collisionNormals, float ParallelismTolerance, float TranslationCutoff)
+    public static Vector3 SlideAlongMultiple(Vector3 translation, Vector3 initialTranslation, List<Vector3> collisionNormals, float ParallelismTolerance, float TranslationCutoff)
 	{
-		
-			
 		if(collisionNormals.Count == 0)
 		{
-			throw new Exception("normal list was empty");
+			return translation;
 		}
 		else if(collisionNormals.Count == 1)
 		{
-			return MoveAndSlide(translation, collisionNormals[0], 0).projectedLeftOver;
+			if(collisionNormals[0].Dot(translation) <= 0)
+			{
+				return MoveAndSlide(translation, collisionNormals[0], 0).projectedLeftOver;
+			}
+			else
+			{
+				return translation;
+			}
 		}
         else if (collisionNormals.Count == 2)
         {
-			var collisionNormalsCopy = collisionNormals.ToList();
-            Vector3 creaseVector = collisionNormalsCopy[0].Cross(collisionNormalsCopy[1]);
+            Vector3 creaseVector = collisionNormals[0].Cross(collisionNormals[1]);
             if (creaseVector != Vector3.Zero)
             {
                 creaseVector = creaseVector.Normalized();
             }
-			Vector3 innerCreasePlane0 = collisionNormalsCopy[0].Cross(creaseVector).Normalized();
-			Vector3 innerCreasePlane1 = creaseVector.Cross(collisionNormalsCopy[1]).Normalized();
-			bool rightSideOfCreasePlane0 = innerCreasePlane0.Dot(translation) > 0;
-			bool rightSideOfCreasePlane1 = innerCreasePlane1.Dot(translation) > 0;
+			Vector3 innerCreasePlane0 = collisionNormals[0].Cross(creaseVector).Normalized();
+			Vector3 innerCreasePlane1 = creaseVector.Cross(collisionNormals[1]).Normalized();
+			bool rightSideOfCreasePlane0 = innerCreasePlane0.Dot(initialTranslation) > 0;
+			bool rightSideOfCreasePlane1 = innerCreasePlane1.Dot(initialTranslation) > 0;
 			if(rightSideOfCreasePlane0 && rightSideOfCreasePlane1)
 			{
 				//moving into crease
-            	float projectionMagnitude = translation.Dot(creaseVector);
+            	float projectionMagnitude = initialTranslation.Dot(creaseVector);
             	Vector3 projectedLeftOver = creaseVector * projectionMagnitude;
             	return projectedLeftOver;
 			}
+			else if(!rightSideOfCreasePlane0 && !rightSideOfCreasePlane1)
+			{
+				return translation;
+			}
 			else if(!rightSideOfCreasePlane0)
 			{
-				return MoveAndSlide(translation, collisionNormals[0], 0).projectedLeftOver;
+				return MoveAndSlide(initialTranslation.Normalized() * translation.Length(), collisionNormals[0], 0).projectedLeftOver;
 			}
 			else if(!rightSideOfCreasePlane1)
 			{
-				return MoveAndSlide(translation, collisionNormals[1], 0).projectedLeftOver;
+				return MoveAndSlide(initialTranslation.Normalized() * translation.Length(), collisionNormals[1], 0).projectedLeftOver;
 			}
 			else
 			{
 				GD.Print("ERROR: moving neither outside nor inside crease");
 				return Vector3.Zero;
 			}
+		}
+		else
+		{
+			
 		}
 		return Vector3.Zero;
 		

@@ -8,7 +8,7 @@ public partial class Puppet : RigidBody3D
 {
 	float Gravity {get;} = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 	const float JumpVelocity = 6.0f;
-	const float Speed = 10.0f;
+	const float Speed = 50.0f;
 	const int MaxCollideAndSlideBounces = 20;
 	const int MaxNudgesOutsideColliders = 10;
 	public const float ParallelismTolerance = 0; // if sin of angles between two vectors is less than this, they are considered parallel
@@ -59,9 +59,11 @@ public partial class Puppet : RigidBody3D
 		}
 		else
 		{
-			// rn friction has the classic quake problem
-			velocity.X = Mathf.MoveToward(velocity.X, 0, Speed/1.2f);
-			velocity.Z = Mathf.MoveToward(velocity.Z, 0, Speed/1.2f);
+			Vector3 newVelocity = velocity;
+			newVelocity.Y = 0;
+			newVelocity = newVelocity.Normalized() * Mathf.MoveToward(newVelocity.Length(), 0, Speed/10f);
+			velocity.X = newVelocity.X;
+			velocity.Z = newVelocity.Z;
 		}
 		return velocity;
 	}
@@ -70,68 +72,44 @@ public partial class Puppet : RigidBody3D
 		return velocity + Gravity * new Vector3(0, -1, 0) * (float)delta;
 	}
 	// only supports convex colliders
-	Vector3 CollideAndSlideIteration(Vector3 fromGlobal, Vector3 translation, int depth)
+	Vector3 CollideAndSlide(Vector3 fromGlobal, Vector3 translation)
 	{
-		if(depth > MaxCollideAndSlideBounces || translation == Vector3.Zero)
+		List<GodotObject> handledColliders = new List<GodotObject>();
+		List<Vector3> handledNormals = new List<Vector3>();		
+		Vector3 leftOverTranslation = translation;
+		Vector3 newPos = fromGlobal;
+		while(SelfCaster.CastExcept(handledColliders, newPos, leftOverTranslation))
 		{
-			// reached max depth or we are not moving
-			//GD.Print("reached end at " + Time.GetTicksMsec() + " threw out " + translation.Length() + "m with "
-			//		 + timesMovedAway + " bounces away from plane");
-			return translation;
-		}
-
-		if(SelfCaster.Cast(fromGlobal, translation))
-		{
-			// collision along path
 			float firstCastFraction = SelfCaster.GetClosestCollisionSafeFraction();
 			Vector3 firstCastNormal = SelfCaster.GetCollisionNormal(0);
-			if(SelfCaster.Cast(fromGlobal, Vector3.Zero))
+			GodotObject firstCastObject = SelfCaster.GetCollider(0);
+			//collision along path
+			if(SelfCaster.CastExcept(handledColliders, newPos, Vector3.Zero))
 			{
 				// we are inside something
-				List<Vector3> intersectingObjectNormals = new();
-				List<GodotObject> intersectingObjects = new();
+				List<GodotObject> overlappingObjects = new();
+				List<Vector3> overlappingNormals = new();
 				for(int i = 0; i < SelfCaster.GetCollisionCount(); i++)
 				{
-					Vector3 normal = SelfCaster.GetCollisionNormal(i);
-					if(normal.Dot(translation.Normalized()) <= -ParallelismTolerance)
-					{
-						intersectingObjectNormals.Add(normal);
-						intersectingObjects.Add(SelfCaster.GetCollider(i));
-					}
+					overlappingObjects.Add(SelfCaster.GetCollider(i));
+					overlappingNormals.Add(SelfCaster.GetCollisionNormal(i));
 				}
-
-				if(intersectingObjectNormals.Count == 0)
-				{
-					// and moving away or along it
-					// ignore it and move
-					(Vector3 toSurface, Vector3 projected) = CustomMath.MoveAndSlide(translation, firstCastNormal, firstCastFraction);
-					DebugLabel.Text += "moving away or along\n";
-					return toSurface + CollideAndSlideIteration(fromGlobal + toSurface, projected, depth + 1);
-				}
-				else
-				{
-					// and moving towards it
-					// collide with it and recurse 
-					DebugLabel.Text += "moving towards\n";
-					Vector3 projected = CustomMath.SlideAlongMultiple(translation, intersectingObjectNormals, ParallelismTolerance, TranslationCutoff);
-					return CollideAndSlideIteration(fromGlobal, projected, depth + 1);
-				}
+				handledColliders.AddRange(overlappingObjects);
+				handledNormals.AddRange(overlappingNormals);
+				Vector3 sliding = CustomMath.SlideAlongMultiple(leftOverTranslation, translation, handledNormals, ParallelismTolerance, TranslationCutoff);
+				leftOverTranslation = sliding;
 			}
 			else
 			{
-				// we are not inside anything
-				// collide with first object and recurse
-				DebugLabel.Text += "not inside, obstacle in way\n";
-				(Vector3 toSurface, Vector3 projected) = CustomMath.MoveAndSlide(translation, firstCastNormal, firstCastFraction);
-				return toSurface + CollideAndSlideIteration(fromGlobal + toSurface, projected, depth + 1);
+				// not inside anything
+				handledColliders.Add(firstCastObject);
+				handledNormals.Add(firstCastNormal);
+				newPos += leftOverTranslation * firstCastFraction;
+				Vector3 sliding = CustomMath.SlideAlongMultiple(leftOverTranslation * (1 - firstCastFraction), translation, handledNormals, ParallelismTolerance, TranslationCutoff);
+				leftOverTranslation = sliding;
 			}
 		}
-		else
-		{
-			// no obstacles
-			DebugLabel.Text += "no obstacles\n";
-			return translation;
-		}
+		return newPos + leftOverTranslation - fromGlobal;
 	}
 	Vector3 NudgeOutsideColliders(Vector3 position)
 	{
@@ -146,7 +124,7 @@ public partial class Puppet : RigidBody3D
 		Velocity = AdjustVelocityToGravity(Velocity, delta);
 		Vector3 translation = Velocity * (float)delta;
 		timesMovedAway = 0;
-		translation = CollideAndSlideIteration(GlobalPosition, translation, 1);
+		translation = CollideAndSlide(GlobalPosition, translation);
 		Position += translation;
 		Velocity = translation / (float)delta;
 
@@ -161,4 +139,3 @@ public partial class Puppet : RigidBody3D
 		//}
 	}
 }
-// SOME BULLSHIT WITH DELTATIME MULTIPLICATION: DO IT PROPERLY, MULTIPLY VELOCITY FIRST AND THEN ALTER THE SPEED.
