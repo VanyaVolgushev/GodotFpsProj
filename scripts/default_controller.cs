@@ -6,6 +6,7 @@ public partial class default_controller : CharacterBody3D
 	
 	[Export] public Node3D HorizontalDirAxis {get; set;}
 	[Export] public Node3D VerticalDirAxis {get; set;}
+	public const float Sensitivity = 0.002f;
 	public const float Speed = 10.0f;
 	public const float JumpVelocity = 4.5f;
 
@@ -20,8 +21,8 @@ public partial class default_controller : CharacterBody3D
 		if(@event is InputEventMouseMotion)
 		{
 			InputEventMouseMotion mouseEvent = @event as InputEventMouseMotion;
-			VerticalDirAxis.RotateX(-mouseEvent.Relative.Y * Settings.Sensitivity);
-			HorizontalDirAxis.RotateY(-mouseEvent.Relative.X * Settings.Sensitivity);
+			VerticalDirAxis.RotateX(-mouseEvent.Relative.Y * Sensitivity);
+			HorizontalDirAxis.RotateY(-mouseEvent.Relative.X * Sensitivity);
 		}
     }
 	public override void _PhysicsProcess(double delta)
