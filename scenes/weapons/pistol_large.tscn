@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://cuc6ajn5idqdl"]
+
+[ext_resource type="PackedScene" uid="uid://dsq40a0byx8av" path="res://assets/Blender Meshes/pistol_large.blend" id="1_kqtrb"]
+
+[node name="pistol_large2" instance=ExtResource("1_kqtrb")]
+
+[node name="Skeleton3D" parent="Armature" index="0"]
+bones/1/enabled = false
+bones/1/position = Vector3(0.000474975, 0.490475, 0.000474975)
+
+[node name="pistol_large" parent="Armature/Skeleton3D" index="0"]
+layers = 2

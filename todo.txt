@@ -1,8 +1,5 @@
-1. трясущаяся камера при передвижении
+ways to fix gun intersection:
 
-план решения:
-    понять что делает get_interpolation_fraction
-
-
-
-2. "прилипание" к стенам
+separate viewport (gun doesn't recieve shadows but can have different fov)
+advanced shader solution by Gamepro5 (How to implement a viewmodel system in godot 4)
+set No Depth Test (inside of flags menu) enabled then increase number in render priority

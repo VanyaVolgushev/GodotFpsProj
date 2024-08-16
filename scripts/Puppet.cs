@@ -27,6 +27,7 @@ public partial class Puppet : RigidBody3D
     public override void _Ready()
     {
 	//	MaxContactsReported = 1;
+		Camera.MakeCurrent();
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		Freeze = true;
         SelfCaster = new SelfCaster3D(GetChild<CollisionShape3D>(0).Shape, this as CollisionObject3D);
