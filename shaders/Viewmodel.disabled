@@ -1,0 +1,31 @@
+func search_and_set_viewmodel_fov_to_all_shaders_in_tree(node, fov):
+	for i in node.get_children():
+		search_and_set_viewmodel_fov_to_all_shaders_in_tree(i, fov)
+		if i is MeshInstance3D:
+			for j in range(i.mesh.get_surface_count()):
+				var temp = i.mesh.surface_get_material(j)
+				if temp is ShaderMaterial:
+					temp.set_shader_parameter("fov", fov)
+
+func set_viewmodel_fov(fov):
+	search_and_set_viewmodel_fov_to_all_shaders_in_tree(self, fov)
+	
+func search_and_apply_viewmodel_shader_code_to_all_pre_existing_shaders_in_tree(current):
+	for i in current.get_children():
+		search_and_apply_viewmodel_shader_code_to_all_pre_existing_shaders_in_tree(i)
+		if i is MeshInstance3D:
+			for j in range(i.mesh.get_surface_count()):
+				var temp = i.mesh.surface_get_material(j)
+				if temp is ShaderMaterial:
+					#edits shader code
+					var code = temp.get_shader().get_code()
+					if code.find("depth_draw_opaque") == -1:
+						code = code.insert(code.find("render_mode ")+"render_mode ".length(), "depth_draw_opaque,")
+					if code.find("uniform float fov : hint_range(20, 120) = 75;") == -1:
+						code = code.insert(code.find("shader_type spatial;")+"shader_type spatial;".length(), "uniform float fov : hint_range(20, 120) = 75;")
+					if code.find("\nPROJECTION_MATRIX[0][0] = (1.0 / tan(fov * 0.5 * PI / 180.0)) / (VIEWPORT_SIZE.x / VIEWPORT_SIZE.y);") == -1:
+						code = code.insert(code.find("void vertex() {")+"void vertex() {".length(), "\nPROJECTION_MATRIX[0][0] = (1.0 / tan(fov * 0.5 * PI / 180.0)) / (VIEWPORT_SIZE.x / VIEWPORT_SIZE.y);")
+					if code.find("\nDEPTH = FRAGCOORD.z * 0.7;") == -1:
+						code = code.insert(code.find("void fragment() {")+"void fragment() {".length(), "\nDEPTH = FRAGCOORD.z * 0.7;")
+					if code != temp.get_shader().get_code():
+						temp.shader.set_code(code)

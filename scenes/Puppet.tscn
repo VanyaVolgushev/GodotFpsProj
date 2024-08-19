@@ -1,7 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://crqwm7jgssth5"]
+[gd_scene load_steps=8 format=3 uid="uid://crqwm7jgssth5"]
 
 [ext_resource type="Script" path="res://scripts/Puppet.cs" id="1_w6hyi"]
+[ext_resource type="Material" uid="uid://2ihfkidfdkek" path="res://assets/Materials/Viewmodel/viewmodel.tres" id="2_u1ojc"]
 [ext_resource type="Script" path="res://scripts/LinearMountInterpolator.cs" id="2_xq8lf"]
+[ext_resource type="PackedScene" uid="uid://dlpdjxsl7exgc" path="res://scenes/ViewModelCamera.tscn" id="3_g5mrw"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ts4xn"]
 
@@ -11,9 +13,11 @@ albedo_color = Color(0.82, 0.1558, 0.21115, 1)
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_kqh0g"]
 material = SubResource("StandardMaterial3D_rqgqw")
 
-[node name="Puppet" type="RigidBody3D" node_paths=PackedStringArray("HorizontalDirAxis", "VerticalDirAxis", "Camera")]
+[node name="Puppet" type="RigidBody3D" node_paths=PackedStringArray("ViewmodelAnimationTree", "HorizontalDirAxis", "VerticalDirAxis", "Camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0119, 0)
 script = ExtResource("1_w6hyi")
+ViewmodelMaterial = ExtResource("2_u1ojc")
+ViewmodelAnimationTree = NodePath("ViewModelCamera/AnimationTree")
 HorizontalDirAxis = NodePath("LinearMount/HorizontalDirAxis")
 VerticalDirAxis = NodePath("LinearMount/HorizontalDirAxis/VerticalDirAxis")
 Camera = NodePath("LinearMount/HorizontalDirAxis/VerticalDirAxis/Camera3D")
@@ -22,6 +26,7 @@ Camera = NodePath("LinearMount/HorizontalDirAxis/VerticalDirAxis/Camera3D")
 shape = SubResource("CapsuleShape3D_ts4xn")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+cast_shadow = 0
 mesh = SubResource("CapsuleMesh_kqh0g")
 skeleton = NodePath("../..")
 
@@ -34,9 +39,17 @@ TargetNode = NodePath("../LinearMountTarget")
 [node name="VerticalDirAxis" type="Node3D" parent="LinearMount/HorizontalDirAxis"]
 
 [node name="Camera3D" type="Camera3D" parent="LinearMount/HorizontalDirAxis/VerticalDirAxis"]
-cull_mask = 1048573
 current = true
-fov = 90.0
+fov = 70.0
 
 [node name="LinearMountTarget" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.669626, 0)
+
+[node name="ViewModelCamera" parent="." instance=ExtResource("3_g5mrw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000610352, 0.669626, 0.0020752)
+
+[node name="RightArmAttachment3D" parent="ViewModelCamera" index="1"]
+transform = Transform3D(0.0748504, -0.911092, -0.405351, 0.0380943, 0.408807, -0.911826, 0.996466, 0.052809, 0.0653064, -0.298741, 2.83653, 1.25383)
+
+[editable path="ViewModelCamera"]
+[editable path="ViewModelCamera/viewmodel"]

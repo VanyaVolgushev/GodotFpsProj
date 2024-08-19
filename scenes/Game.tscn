@@ -1,14 +1,10 @@
-[gd_scene load_steps=15 format=3 uid="uid://c8j6siaq26ldw"]
+[gd_scene load_steps=11 format=3 uid="uid://c8j6siaq26ldw"]
 
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_hq5p7"]
 [ext_resource type="PackedScene" uid="uid://crqwm7jgssth5" path="res://scenes/Puppet.tscn" id="1_mp2fq"]
 [ext_resource type="PackedScene" uid="uid://d34b6sxrj03io" path="res://scenes/Floor.tscn" id="3_gf1oa"]
 [ext_resource type="Material" uid="uid://c78gakcmmwffp" path="res://assets/Materials/Concrete1/concrete1.tres" id="4_v0qps"]
 [ext_resource type="PackedScene" uid="uid://dx4dpu6q46pd5" path="res://scenes/ConcreteCube.tscn" id="5_vr8ur"]
-[ext_resource type="PackedScene" uid="uid://c8nipyrcq6f7m" path="res://scenes/debug/MarkerStick.tscn" id="6_4yjwm"]
-[ext_resource type="PackedScene" uid="uid://dgxe2rktqe3rv" path="res://scenes/debug/MarkerSphere.tscn" id="7_66qk7"]
-[ext_resource type="Script" path="res://scripts/ViewModelContainer.cs" id="8_coiv2"]
-[ext_resource type="PackedScene" uid="uid://dlpdjxsl7exgc" path="res://scenes/ViewModelCamera.tscn" id="9_wyq2d"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_rneq0"]
 
@@ -30,10 +26,6 @@ glow_enabled = true
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_hq5p7")
-
-[node name="Puppet" parent="." node_paths=PackedStringArray("DebugLabel") instance=ExtResource("1_mp2fq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0129124, 1.72523, 6.95794)
-DebugLabel = NodePath("../DebugLabel")
 
 [node name="Level" type="Node" parent="."]
 
@@ -210,32 +202,5 @@ transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75
 layers = 3
 shadow_enabled = true
 
-[node name="MarkerStick" parent="." instance=ExtResource("6_4yjwm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
-
-[node name="Marker" parent="." instance=ExtResource("7_66qk7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
-
-[node name="DebugLabel" type="Label" parent="."]
-offset_left = 895.0
-offset_top = 16.0
-offset_right = 1137.0
-offset_bottom = 65.0
-text = "Speed=
-..."
-vertical_alignment = 2
-
-[node name="ViewModelContainer" type="SubViewportContainer" parent="."]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("8_coiv2")
-
-[node name="SubViewport" type="SubViewport" parent="ViewModelContainer"]
-transparent_bg = true
-handle_input_locally = false
-render_target_update_mode = 4
-
-[node name="ViewModelCamera" parent="ViewModelContainer/SubViewport" instance=ExtResource("9_wyq2d")]
+[node name="Puppet" parent="." instance=ExtResource("1_mp2fq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.47698, 1.562, 5.54283)

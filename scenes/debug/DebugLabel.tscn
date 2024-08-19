@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dcp3uk1s2lpd0"]
+
+[node name="DebugLabel" type="RichTextLabel"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 334.0
+offset_bottom = 181.0
+auto_translate = false
+localize_numeral_system = false
+bbcode_enabled = true
+text = "Some debug property: . . .
+. . ."
+scroll_active = false
+autowrap_mode = 0
+shortcut_keys_enabled = false
+meta_underlined = false
+hint_underlined = false

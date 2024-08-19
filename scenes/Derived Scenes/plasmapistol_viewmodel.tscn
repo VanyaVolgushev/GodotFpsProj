@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://hm6lrgp5s7so"]
+
+[ext_resource type="PackedScene" uid="uid://c0dkmg80xqisp" path="res://assets/plasmapistol_viewmodel.glb" id="1_ei2kr"]
+[ext_resource type="Material" uid="uid://2ihfkidfdkek" path="res://assets/Materials/Viewmodel/viewmodel.tres" id="2_awch4"]
+
+[node name="plasmapistol_viewmodel" instance=ExtResource("1_ei2kr")]
+
+[node name="Skeleton3D" parent="plasma" index="0"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+bones/0/rotation = Quaternion(0.13828, -0.693454, -0.13828, 0.693454)
+bones/1/rotation = Quaternion(-0.00861568, -0.0125051, -0.567272, 0.823391)
+bones/1/scale = Vector3(1, 1, 1)
+bones/2/rotation = Quaternion(-0.00861586, -0.0125051, -0.567272, 0.82339)
+
+[node name="Plane_003" parent="plasma/Skeleton3D" index="0"]
+surface_material_override/0 = ExtResource("2_awch4")
+surface_material_override/1 = ExtResource("2_awch4")
+surface_material_override/2 = ExtResource("2_awch4")
+surface_material_override/3 = ExtResource("2_awch4")
+surface_material_override/4 = ExtResource("2_awch4")
+surface_material_override/5 = ExtResource("2_awch4")

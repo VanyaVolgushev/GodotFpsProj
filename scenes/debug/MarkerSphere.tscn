@@ -1,14 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://dgxe2rktqe3rv"]
+[gd_scene load_steps=4 format=3 uid="uid://c8nipyrcq6f7m"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_tyhtd"]
-radius = 0.1
-height = 0.2
+[ext_resource type="Script" path="res://scripts/debug/DebugGismo.cs" id="1_727yy"]
+[ext_resource type="Material" uid="uid://bhkavbxl0q8p0" path="res://assets/Materials/Debug/Marker.tres" id="1_fyax3"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6e0fa"]
-albedo_color = Color(0, 0, 0, 1)
-emission_enabled = true
-emission = Color(1.10196, 0, 0, 1)
+[sub_resource type="SphereMesh" id="SphereMesh_glat7"]
 
-[node name="MarkerSphere" type="MeshInstance3D"]
-mesh = SubResource("SphereMesh_tyhtd")
-surface_material_override/0 = SubResource("StandardMaterial3D_6e0fa")
+[node name="MarkerStick" type="Node3D"]
+script = ExtResource("1_727yy")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+mesh = SubResource("SphereMesh_glat7")
+surface_material_override/0 = ExtResource("1_fyax3")

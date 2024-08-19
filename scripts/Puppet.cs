@@ -13,30 +13,22 @@ public partial class Puppet : RigidBody3D
 	const float SprintMultiplier = 3f;
 	public const float ParallelismTolerance = 0; // if sin of angles between two vectors is less than this, they are considered parallel
 	public const float TranslationCutoff = 1e-10f; // if velocity is less than this, puppet will not move
+
+	[Export] public ShaderMaterial ViewmodelMaterial {get; set;}
+	[Export] public AnimationTree ViewmodelAnimationTree {get; set;}
 	[Export] public Node3D HorizontalDirAxis {get; set;}
 	[Export] public Node3D VerticalDirAxis {get; set;}
 	[Export] public Camera3D Camera {get; set;}
 	Vector3 Velocity;
 	SelfCaster3D SelfCaster;
-	//	DEBUG
-	[Export] public Label DebugLabel {get; set;}
-	private PackedScene LinearMarker {get; set;}
-	private PackedScene ArrowMarker {get; set;}
-	int timesMovedAway = 0;
-
     public override void _Ready()
     {
 	//	MaxContactsReported = 1;
 		Camera.MakeCurrent();
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		Freeze = true;
-        SelfCaster = new SelfCaster3D(GetChild<CollisionShape3D>(0).Shape, this as CollisionObject3D);
+        SelfCaster = new SelfCaster3D(GetNode<CollisionShape3D>("CollisionShape3D").Shape, this as CollisionObject3D);
 		AddChild(SelfCaster);
-		ArrowMarker = (PackedScene)GD.Load("res://scenes/debug/MarkerStick.tscn");
-		LinearMarker = (PackedScene)GD.Load("res://scenes/debug/MarkerSphere.tscn");
-		// to instantiate marker:
-        //	var marker = ArrowMarker.Instantiate();
-		//	AddSibling(marker);
     }
 
     public override void _Input(InputEvent @event)
@@ -127,23 +119,42 @@ public partial class Puppet : RigidBody3D
 	}
     public override void _PhysicsProcess(double delta)
 	{
-		if(DebugLabel != null){DebugLabel.Text = "";}
 		Velocity = AdjustVelocityToInput(Velocity, delta);
 		Velocity = AdjustVelocityToGravity(Velocity, delta);
 		Vector3 translation = Velocity * (float)delta;
-		timesMovedAway = 0;
 		translation = CollideAndSlide(GlobalPosition, translation);
 		Position += translation;
 		Velocity = translation / (float)delta;
+		Debugger.Instance.SetProperty("Speed", Velocity.Length(), "m/s", 2);
+		if (Input.IsActionJustPressed("primary_action"))
+		{
+			ViewmodelAnimationTree.Set("parameters/OneShot/request", (int)AnimationNodeOneShot.OneShotRequest.Fire);
 
-		//Debug
-		var VelocityString = (Mathf.Round(Velocity.Length() * 100)/100).ToString();
-		if(DebugLabel != null){DebugLabel.Text += "\nSpeed = " + VelocityString.Substring(0, Math.Min(VelocityString.Length, 3)) + "m/s";}
-		//int depth = 0;
+			    var spaceState = GetWorld3D().DirectSpaceState;
+    			var query = PhysicsRayQueryParameters3D.Create(Camera.GlobalPosition, -Camera.GlobalBasis.Z * 1000);
+    			var result = spaceState.IntersectRay(query);
+			Debugger.Instance.CreateDebugArrow((Vector3)result["position"], (Vector3)result["normal"], 0.5f, 0.3f, new Color(1, 0, 0));
+		}
+		
 		//while(SelfCaster.ZeroCast() && depth < MaxNudgesOutsideColliders)
 		//{
 		//	Position = NudgeOutsideColliders(Position);
 		//	depth++;
 		//}
 	}
+    public override void _Process(double delta)
+    {
+        if (Input.IsActionPressed("fov-"))
+			Camera.Fov -= (float)delta * 20f;
+		if (Input.IsActionPressed("fov+"))
+			Camera.Fov += (float)delta * 20f;
+		if (Input.IsActionPressed("viewmodel_fov-")) {
+		    float fov = (float)ViewmodelMaterial.GetShaderParameter("fov");
+			ViewmodelMaterial.SetShaderParameter("fov", fov - (float)delta * 20f);
+		}
+		if (Input.IsActionPressed("viewmodel_fov+")) {
+			float fov = (float)ViewmodelMaterial.GetShaderParameter("fov");
+			ViewmodelMaterial.SetShaderParameter("fov", fov + (float)delta * 20f);
+		}
+    }
 }
