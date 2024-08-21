@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://c8j6siaq26ldw"]
+[gd_scene load_steps=12 format=3 uid="uid://c8j6siaq26ldw"]
 
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_hq5p7"]
 [ext_resource type="PackedScene" uid="uid://crqwm7jgssth5" path="res://scenes/Puppet.tscn" id="1_mp2fq"]
 [ext_resource type="PackedScene" uid="uid://d34b6sxrj03io" path="res://scenes/Floor.tscn" id="3_gf1oa"]
 [ext_resource type="Material" uid="uid://c78gakcmmwffp" path="res://assets/Materials/Concrete1/concrete1.tres" id="4_v0qps"]
 [ext_resource type="PackedScene" uid="uid://dx4dpu6q46pd5" path="res://scenes/ConcreteCube.tscn" id="5_vr8ur"]
+[ext_resource type="PackedScene" uid="uid://0yi0xwb8ewya" path="res://assets/viewmodel.glb" id="6_ywjyn"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_rneq0"]
 
@@ -204,3 +205,6 @@ shadow_enabled = true
 
 [node name="Puppet" parent="." instance=ExtResource("1_mp2fq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.47698, 1.562, 5.54283)
+
+[node name="viewmodel" parent="." instance=ExtResource("6_ywjyn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.3083, 0.0670323, 3.45635)

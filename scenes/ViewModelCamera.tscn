@@ -1,30 +1,55 @@
-[gd_scene load_steps=8 format=3 uid="uid://dlpdjxsl7exgc"]
+[gd_scene load_steps=14 format=3 uid="uid://dlpdjxsl7exgc"]
 
 [ext_resource type="Script" path="res://scripts/ViewModelCamera.cs" id="1_vetss"]
-[ext_resource type="PackedScene" uid="uid://dll1kuectacid" path="res://scenes/Derived Scenes/viewmodel.tscn" id="2_82qi6"]
+[ext_resource type="PackedScene" uid="uid://11a741stu4r2" path="res://scenes/Derived Scenes/viewmodel.tscn" id="2_82qi6"]
 [ext_resource type="PackedScene" uid="uid://hm6lrgp5s7so" path="res://scenes/Derived Scenes/plasmapistol_viewmodel.tscn" id="3_7l7fv"]
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_h4ht2"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_4k6qy"]
+animation = &"pull"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_sin1x"]
+animation = &"shotleft"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_gfidw"]
+animation = &"shotright"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6oc6y"]
 animation = &"idle"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_08ecg"]
-animation = &"pull2"
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_4g5qp"]
 
-[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_3l4dm"]
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_yexvj"]
 
-[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_sikol"]
-graph_offset = Vector2(-326.539, 42.4084)
-nodes/Animation/node = SubResource("AnimationNodeAnimation_08ecg")
-nodes/Animation/position = Vector2(-140, 200)
-"nodes/Animation 2/node" = SubResource("AnimationNodeAnimation_h4ht2")
-"nodes/Animation 2/position" = Vector2(-140, 80)
-nodes/OneShot/node = SubResource("AnimationNodeOneShot_3l4dm")
-nodes/OneShot/position = Vector2(160, 100)
-nodes/output/position = Vector2(340, 120)
-node_connections = [&"OneShot", 0, &"Animation 2", &"OneShot", 1, &"Animation", &"output", 0, &"OneShot"]
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_2pi3t"]
+
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_qgxcu"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_nqmuf"]
+animation = &"ready"
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_u806o"]
+graph_offset = Vector2(-481.867, 36.2393)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_6oc6y")
+nodes/Animation/position = Vector2(-680, -160)
+"nodes/Animation 2/node" = SubResource("AnimationNodeAnimation_4k6qy")
+"nodes/Animation 2/position" = Vector2(-520, 80)
+"nodes/Animation 3/node" = SubResource("AnimationNodeAnimation_sin1x")
+"nodes/Animation 3/position" = Vector2(-580, 240)
+"nodes/Animation 4/node" = SubResource("AnimationNodeAnimation_gfidw")
+"nodes/Animation 4/position" = Vector2(-460, 360)
+nodes/Idle2Ready/node = SubResource("AnimationNodeBlend2_4g5qp")
+nodes/Idle2Ready/position = Vector2(-460, -180)
+nodes/Pull/node = SubResource("AnimationNodeOneShot_yexvj")
+nodes/Pull/position = Vector2(-160, -60)
+nodes/ShootLeft2Right/node = SubResource("AnimationNodeBlend2_2pi3t")
+nodes/ShootLeft2Right/position = Vector2(-240, 220)
+nodes/Shot/node = SubResource("AnimationNodeOneShot_qgxcu")
+nodes/Shot/position = Vector2(120, 80)
+nodes/ready/node = SubResource("AnimationNodeAnimation_nqmuf")
+nodes/ready/position = Vector2(-680, -20)
+node_connections = [&"Idle2Ready", 0, &"Animation", &"Idle2Ready", 1, &"ready", &"Pull", 0, &"Idle2Ready", &"Pull", 1, &"Animation 2", &"ShootLeft2Right", 0, &"Animation 3", &"ShootLeft2Right", 1, &"Animation 4", &"Shot", 0, &"Pull", &"Shot", 1, &"ShootLeft2Right", &"output", 0, &"Shot"]
 
 [node name="ViewModelCamera" type="Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000610352, 0, 0.0020752)
 cull_mask = 1
 current = true
 fov = 25.0
@@ -33,29 +58,26 @@ script = ExtResource("1_vetss")
 [node name="viewmodel" parent="." instance=ExtResource("2_82qi6")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
 
-[node name="RIG-killerbot_005" parent="viewmodel" index="0"]
-transform = Transform3D(0.0871558, 0, 0.996195, 0, 1, 0, -0.996195, 0, 0.0871558, 0, -3.2192, -0.00545548)
-
-[node name="Skeleton3D" parent="viewmodel/RIG-killerbot_005" index="1"]
-transform = Transform3D(1, -1.28057e-09, -7.10543e-15, 6.0536e-09, 1, 5.40167e-08, -2.16067e-07, -1.32349e-23, 1, 0.0130571, -0.0302601, 0.0327861)
-bones/44/parent = 354
-
 [node name="RightArmAttachment3D" type="BoneAttachment3D" parent="."]
-transform = Transform3D(0.0748504, -0.911092, -0.405351, 0.0380943, 0.408807, -0.911826, 0.996466, 0.052809, 0.0653064, -0.298741, 2.83653, 1.25383)
-bone_name = "WeaponMount"
-bone_idx = 348
+transform = Transform3D(0.011873, -0.409823, 0.912088, 0.0178839, 0.912093, 0.409593, -0.999769, 0.0114485, 0.0181586, 0.360687, -0.340783, -1.1564)
+bone_name = "item"
+bone_idx = 347
 use_external_skeleton = true
 external_skeleton = NodePath("../viewmodel/RIG-killerbot_005/Skeleton3D")
 
 [node name="plasmapistol_viewmodel" parent="RightArmAttachment3D" instance=ExtResource("3_7l7fv")]
-transform = Transform3D(1, 0, 2.23517e-08, 8.9407e-08, -2.23517e-08, 1, 0, -1, -4.09782e-08, 0, 0, 0)
 
-[node name="AnimationTree" type="AnimationTree" parent="."]
-root_node = NodePath("../viewmodel")
-tree_root = SubResource("AnimationNodeBlendTree_sikol")
-anim_player = NodePath("../viewmodel/AnimationPlayer")
-parameters/OneShot/active = false
-parameters/OneShot/internal_active = false
-parameters/OneShot/request = 0
+[node name="AnimationTree" type="AnimationTree" parent="RightArmAttachment3D/plasmapistol_viewmodel"]
+root_node = NodePath("../../../viewmodel")
+tree_root = SubResource("AnimationNodeBlendTree_u806o")
+anim_player = NodePath("../../../viewmodel/AnimationPlayer")
+parameters/Idle2Ready/blend_amount = 0
+parameters/Pull/active = false
+parameters/Pull/internal_active = false
+parameters/Pull/request = 0
+parameters/ShootLeft2Right/blend_amount = 0.4
+parameters/Shot/active = false
+parameters/Shot/internal_active = false
+parameters/Shot/request = 0
 
 [editable path="viewmodel"]

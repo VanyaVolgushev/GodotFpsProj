@@ -35,13 +35,17 @@ public partial class Debugger : Node
     public void CreateDebugArrow(Vector3 pos, Vector3 dir, float scale, float timer, Color color)
     {
         var arrow = CreateDebugGismo(ArrowMarkerScene, pos, scale, timer, color);
-        if(MathF.Abs(dir.Normalized().Dot(Vector3.Up)) < 1 - 0.0001f)
+        if(dir.Normalized().Dot(Vector3.Up) > 1 - 0.0001f)
         {
-            arrow.LookAt(arrow.GlobalPosition + dir, Vector3.Up);
+            arrow.Rotate(Vector3.Right, Mathf.Pi / 2);
+        }
+        else if(dir.Normalized().Dot(Vector3.Down) > 1 - 0.0001f)
+        {
+            arrow.Rotate(Vector3.Right, -Mathf.Pi / 2);
         }
         else
         {
-            arrow.Rotate(Vector3.Right, Mathf.Pi / 2);
+            arrow.LookAt(arrow.GlobalPosition + dir, Vector3.Up);
         }
     }
     public void CreateDebugSphere(Vector3 pos, float scale, float timer, Color color)

@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://blw7p8ke2ux8a"]
 
-[ext_resource type="Script" path="res://scripts/default_controller.cs" id="1_b7tqf"]
+[ext_resource type="Script" path="res://scripts/legacy/default_controller.cs" id="1_b7tqf"]
 [ext_resource type="Script" path="res://scripts/LinearMountInterpolator.cs" id="2_061gj"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ts4xn"]

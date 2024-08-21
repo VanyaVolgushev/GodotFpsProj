@@ -21,9 +21,11 @@ public partial class Puppet : RigidBody3D
 	[Export] public Camera3D Camera {get; set;}
 	Vector3 Velocity;
 	SelfCaster3D SelfCaster;
+	Random Random;
     public override void _Ready()
     {
 	//	MaxContactsReported = 1;
+		Random = new Random();
 		Camera.MakeCurrent();
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		Freeze = true;
@@ -126,13 +128,18 @@ public partial class Puppet : RigidBody3D
 		Position += translation;
 		Velocity = translation / (float)delta;
 		Debugger.Instance.SetProperty("Speed", Velocity.Length(), "m/s", 2);
+		if (Input.IsActionJustPressed("secondary_action"))
+		{
+			ViewmodelAnimationTree.Set("parameters/Pull/request", (int)AnimationNodeOneShot.OneShotRequest.Fire);
+		}
 		if (Input.IsActionJustPressed("primary_action"))
 		{
-			ViewmodelAnimationTree.Set("parameters/OneShot/request", (int)AnimationNodeOneShot.OneShotRequest.Fire);
+			ViewmodelAnimationTree.Set("parameters/ShootLeft2Right/blend_amount", (float)Random.NextDouble() * 0.5f);
+			ViewmodelAnimationTree.Set("parameters/Shot/request", (int)AnimationNodeOneShot.OneShotRequest.Fire);
 
-			    var spaceState = GetWorld3D().DirectSpaceState;
-    			var query = PhysicsRayQueryParameters3D.Create(Camera.GlobalPosition, -Camera.GlobalBasis.Z * 1000);
-    			var result = spaceState.IntersectRay(query);
+			var spaceState = GetWorld3D().DirectSpaceState;
+    		var query = PhysicsRayQueryParameters3D.Create(Camera.GlobalPosition, -Camera.GlobalBasis.Z * 1000);
+    		var result = spaceState.IntersectRay(query);
 			Debugger.Instance.CreateDebugArrow((Vector3)result["position"], (Vector3)result["normal"], 0.5f, 0.3f, new Color(1, 0, 0));
 		}
 		
