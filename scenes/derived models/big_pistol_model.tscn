@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://8itjkadl3aic"]
+
+[ext_resource type="PackedScene" uid="uid://cb1kb4vbetbsa" path="res://assets/big_pistol.glb" id="1_42g52"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="big_pistol" parent="." instance=ExtResource("1_42g52")]

@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3 uid="uid://cjea8f4ie2ca0"]
+
+[ext_resource type="PackedScene" uid="uid://8itjkadl3aic" path="res://scenes/derived models/big_pistol_model.tscn" id="1_2dso2"]
+[ext_resource type="Script" path="res://scripts/FireArm.cs" id="1_x8xay"]
+[ext_resource type="Texture2D" uid="uid://bplx2orb0pf3s" path="res://assets/Textures/UI/Previews/bigpistol_outline.png" id="2_gl6b1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_el027"]
+size = Vector3(0.0531312, 0.120365, 0.0410004)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sxay6"]
+size = Vector3(0.247193, 0.0746917, 0.0600434)
+
+[node name="Bigpistol" type="RigidBody3D"]
+script = ExtResource("1_x8xay")
+PreviewTexture = ExtResource("2_gl6b1")
+MirrorPreview = true
+EquipTime = 1.0
+HolsterTime = 1.0
+
+[node name="Node3D" parent="." instance=ExtResource("1_2dso2")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.944777, 0.327713, 0, -0.327713, 0.944777, 0, 0, 0, 1, 0.0125619, 0.0614195, 0.000160219)
+shape = SubResource("BoxShape3D_el027")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.105041, 0.163148, 0.000509246)
+shape = SubResource("BoxShape3D_sxay6")

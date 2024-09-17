@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://m08ktpu7hd5b"]
+
+[ext_resource type="Texture2D" uid="uid://c2n8ajr28k3oc" path="res://assets/Textures/UI/Previews/plasma_pistol_outline.png" id="1_kwtk2"]
+
+[node name="ItemPreview" type="TextureRect"]
+modulate = Color(1, 1, 1, 0.823529)
+offset_right = 252.0
+offset_bottom = 82.0
+size_flags_horizontal = 0
+texture = ExtResource("1_kwtk2")
+stretch_mode = 3

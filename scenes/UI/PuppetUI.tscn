@@ -1,0 +1,48 @@
+[gd_scene load_steps=4 format=3 uid="uid://be1cted18yeoh"]
+
+[ext_resource type="Texture2D" uid="uid://1qny5lusasi2" path="res://assets/Textures/UI/crosshair.png" id="1_3lrh1"]
+[ext_resource type="Script" path="res://scripts/puppet/PuppetUI.cs" id="1_qiylh"]
+[ext_resource type="PackedScene" uid="uid://m08ktpu7hd5b" path="res://scenes/UI/ItemPreview.tscn" id="2_f20gx"]
+
+[node name="PuppetUI" type="Control" node_paths=PackedStringArray("ItemPreviewContainer")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_qiylh")
+ItemPreviewContainer = NodePath("MarginContainer/HBoxPreviewsContainer")
+ItemPreviewScene = ExtResource("2_f20gx")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 2
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_3lrh1")
+stretch_mode = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -382.0
+offset_right = 382.0
+offset_bottom = 82.0
+grow_horizontal = 2
+theme_override_constants/margin_top = 30
+
+[node name="HBoxPreviewsContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+alignment = 1

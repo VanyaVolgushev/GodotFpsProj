@@ -1,5 +1,6 @@
-ways to fix gun intersection:
+select active item
 
-separate viewport (gun doesn't recieve shadows but can have different fov)
-advanced shader solution by Gamepro5 (How to implement a viewmodel system in godot 4)
-set No Depth Test (inside of flags menu) enabled then increase number in render priority
+
+
+viewmodel rendering
+proper scale for hands and weapons

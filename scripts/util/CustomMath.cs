@@ -6,25 +6,6 @@ using Godot;
 
 public static class CustomMath
 {
-	public static void DebugArrow(Vector3 pos, Vector3 dir, Vector3 scale, Window root)
-	{
-		var ArrowMarker = (PackedScene)GD.Load("res://scenes/debug/MarkerStick.tscn");
-		var LinearMarker = (PackedScene)GD.Load("res://scenes/debug/MarkerSphere.tscn");
-
-		// DEBUG
-		var marker = (Node3D)ArrowMarker.Instantiate();
-		root.AddChild(marker);
-		marker.Position = pos;
-		marker.Scale = scale;
-		if((Vector3.Down - dir).Length() > 0.001 && (Vector3.Up - dir).Length() > 0.001)
-		{
-			marker.LookAt(marker.GlobalTransform.Origin + dir, Vector3.Up);
-		}
-		else
-		{
-			marker.Rotate(Vector3.Right, Mathf.Pi / 2);
-		}
-	}
 	public static Vector2 ProjectionCoord(Vector3 vector, Vector3 planeNormal)
     {
 		if(planeNormal == Vector3.Up)
@@ -160,5 +141,9 @@ public static class CustomMath
 		float projectionMagnitude = translation.Dot(creaseVector);
         Vector3 projectedLeftOver = creaseVector * projectionMagnitude;
         return projectedLeftOver;
+	}
+	public static Vector3 Invert(Vector3 vec)
+	{
+		return new Vector3(1f/vec.X, 1f/vec.Y, 1f/vec.Z);
 	}
 }

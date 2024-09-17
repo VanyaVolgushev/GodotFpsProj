@@ -20,10 +20,11 @@ public partial class DebugGismo : Node3D
 		if(!wasGivenColor)
 		{
 			myMaterial = (GetChild(0) as MeshInstance3D).GetActiveMaterial(0) as StandardMaterial3D;
-			myMaterial = (StandardMaterial3D)myMaterial.Duplicate();
-			wasGivenColor = true;
+			myMaterial = (StandardMaterial3D)(myMaterial.Duplicate());
+			(GetChild(0) as MeshInstance3D).SetSurfaceOverrideMaterial(0, myMaterial);
 		}
 		myMaterial.AlbedoColor = color;
+		myMaterial.Emission = color;
 	}
 	public void SetDuration(float seconds)
 	{

@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3 uid="uid://brf3hs0aqy1bf"]
+
+[ext_resource type="Script" path="res://scripts/FireArm.cs" id="1_bjeby"]
+[ext_resource type="PackedScene" uid="uid://hm6lrgp5s7so" path="res://scenes/derived models/plasmapistol_model.tscn" id="1_ioqny"]
+[ext_resource type="Texture2D" uid="uid://c2n8ajr28k3oc" path="res://assets/Textures/UI/Previews/plasma_pistol_outline.png" id="2_bkyu1"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_0pmiq"]
+height = 0.554017
+radius = 0.0190745
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_oirbt"]
+size = Vector3(0.065548, 0.154467, 0.0340424)
+
+[node name="Plasmapistol" type="RigidBody3D"]
+script = ExtResource("1_bjeby")
+PreviewTexture = ExtResource("2_bkyu1")
+EquipTime = 1.0
+HolsterTime = 1.0
+
+[node name="plasmapistol_model" parent="." instance=ExtResource("1_ioqny")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0.243151, 0.153249, 0)
+shape = SubResource("CylinderShape3D_0pmiq")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.950456, 0.310859, 0, -0.310859, 0.950456, 0, 0, 0, 1, 0.032748, 0.0843163, 3.81488e-05)
+shape = SubResource("BoxShape3D_oirbt")

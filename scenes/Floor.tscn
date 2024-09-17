@@ -7,7 +7,7 @@ lightmap_size_hint = Vector2i(203, 115)
 size = Vector3(19.895, 1, 19.96)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_u3v73"]
-size = Vector3(19.8797, 1, 19.9799)
+size = Vector3(19.8797, 1, 19.9661)
 
 [node name="MeshInstance3D" type="MeshInstance3D"]
 mesh = SubResource("BoxMesh_nw7vp")
@@ -16,5 +16,4 @@ surface_material_override/0 = ExtResource("1_5sc88")
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(1.00166, 0, 0, 0, 1.00166, 0, 0, 0, 1.00166, 0, 0, 0)
 shape = SubResource("BoxShape3D_u3v73")
