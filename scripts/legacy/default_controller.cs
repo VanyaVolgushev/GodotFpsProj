@@ -3,12 +3,11 @@ using System;
 
 public partial class default_controller : CharacterBody3D
 {
-	
 	[Export] public Node3D HorizontalDirAxis {get; set;}
 	[Export] public Node3D VerticalDirAxis {get; set;}
-	public const float Sensitivity = 0.002f;
-	public const float Speed = 10.0f;
-	public const float JumpVelocity = 4.5f;
+	[Export] public const float Speed = 7.0f;
+	[Export] public const float Sensitivity = 0.002f;
+	[Export] public const float JumpVelocity = 4.5f;
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();

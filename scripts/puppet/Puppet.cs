@@ -7,16 +7,17 @@ using Godot;
 public partial class Puppet : RigidBody3D
 {
 	public Vector3 Velocity { get { return _Velocity; } }
-	public event Inventory.ItemlistChangedAction OnInventoryChanged;
+	public event Inventory.ItemlistChangedDelegate OnInventoryChanged;
 	const float Sensitivity = 0.0012f;
 	const float JumpVelocity = 6.0f;
 	const float Speed = 7.0f;
 	const float SprintMultiplier = 3f;
 	const float PickupRange = 3.0f;
 	float _Gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
-	[Export] Node3D HorizontalDirAxis;
-	[Export] Node3D VerticalDirAxis;
-	[Export] Camera3D Camera;
+	[Export] Node3D _HorizontalDirAxis;
+	[Export] Node3D _VerticalDirAxis;
+	[Export] Camera3D _Camera;
+	[Export] AnimationTree _ArmsTree;
 	Inventory _Inventory;
 	PuppetAnimationHandler _AnimationHandler;
 	BoneAttachment3D _HandAttachment;
@@ -26,23 +27,24 @@ public partial class Puppet : RigidBody3D
 	Random _Random;
     public override void _Ready()
     {
-		Camera.MakeCurrent();
+		_Camera.MakeCurrent();
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		_Random = new Random();
 		Freeze = true;
 		UIHandler.Instance.SetControlledPuppet(this);
         _SelfCaster = new SelfCaster3D(GetNode<CollisionShape3D>("CollisionShape3D").Shape, this as CollisionObject3D);
 		AddChild(_SelfCaster);
-		_Inventory = new Inventory(FindChild("ViewModelCamera").FindChild("RightArmAttachment3D") as BoneAttachment3D, Camera);
+		_Inventory = new Inventory(FindChild("ViewModelCamera").FindChild("RightArmAttachment3D") as BoneAttachment3D, _Camera);
 		AddChild(_Inventory);
 		_Inventory.ItemlistChanged += OnInventoryChanged;
+		_AnimationHandler = new PuppetAnimationHandler(_Inventory.AnimationEventInformer, _ArmsTree);
     }
 	public override void _Process(double delta)
     {
         if (Input.IsActionPressed("fov-"))
-			Camera.Fov -= (float)delta * 20f;
+			_Camera.Fov -= (float)delta * 20f;
 		if (Input.IsActionPressed("fov+"))
-			Camera.Fov += (float)delta * 20f;
+			_Camera.Fov += (float)delta * 20f;
 		if (Input.IsActionPressed("viewmodel_fov-")) {
 		    //TODO
 		}
@@ -118,8 +120,8 @@ public partial class Puppet : RigidBody3D
 		if(@event is InputEventMouseMotion)
 		{
 			InputEventMouseMotion mouseEvent = @event as InputEventMouseMotion;
-			VerticalDirAxis.RotateX(-mouseEvent.Relative.Y * Sensitivity);
-			HorizontalDirAxis.RotateY(-mouseEvent.Relative.X * Sensitivity);
+			_VerticalDirAxis.RotateX(-mouseEvent.Relative.Y * Sensitivity);
+			_HorizontalDirAxis.RotateY(-mouseEvent.Relative.X * Sensitivity);
 		}
     }
 	Vector3 AdjustVelocityToInput(Vector3 velocity, double delta)
@@ -127,7 +129,7 @@ public partial class Puppet : RigidBody3D
 		if (Input.IsActionJustPressed("jump"))
 			velocity.Y = JumpVelocity;
 		Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_backward");
-		Vector3 direction = HorizontalDirAxis.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y);
+		Vector3 direction = _HorizontalDirAxis.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y);
 		if (direction != Vector3.Zero)
 		{
 			var sprintMult = 1f;
@@ -202,7 +204,7 @@ public partial class Puppet : RigidBody3D
 	(CollisionObject3D collisionObject3D, Vector3 position, Vector3 normal) RaycastFromCamera(float distance)
 	{
 		var spaceState = GetWorld3D().DirectSpaceState;
-    	var query = PhysicsRayQueryParameters3D.Create(Camera.GlobalPosition, Camera.GlobalPosition - Camera.GlobalBasis.Z * distance);
+    	var query = PhysicsRayQueryParameters3D.Create(_Camera.GlobalPosition, _Camera.GlobalPosition - _Camera.GlobalBasis.Z * distance);
     	var result = spaceState.IntersectRay(query);
 
 		if (result.ContainsKey("position"))

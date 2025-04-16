@@ -25,11 +25,11 @@ public partial class UIHandler : Node
 
     }
 
-    void UpdateItemPreviews(List<InventoryItem> items, InventoryState state)
+    void UpdateItemPreviews(List<Item> items, InventoryState state)
     {
         _PuppetUI.ClearPreviews();
         int i = 0;
-        foreach(InventoryItem item in items)
+        foreach(Item item in items)
         {
             bool isPrimary = i == state.TargetItems.primary;          
             _PuppetUI.AddItemPreview(item.PreviewTexture, isPrimary, item.MirrorPreview);

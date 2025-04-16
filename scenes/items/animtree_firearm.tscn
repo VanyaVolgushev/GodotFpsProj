@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://dq7h1xfgjdj0e"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_vf2ee"]
+
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_h45wt"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wi4af"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_h7mmd"]
+graph_offset = Vector2(-670.869, 43.0198)
+nodes/BaseAnim/node = SubResource("AnimationNodeAnimation_vf2ee")
+nodes/BaseAnim/position = Vector2(-460, 120)
+nodes/OneShot/node = SubResource("AnimationNodeOneShot_h45wt")
+nodes/OneShot/position = Vector2(20, 140)
+nodes/OneShotAnim/node = SubResource("AnimationNodeAnimation_wi4af")
+nodes/OneShotAnim/position = Vector2(-460, 240)
+node_connections = [&"OneShot", 0, &"BaseAnim", &"OneShot", 1, &"OneShotAnim", &"output", 0, &"OneShot"]
+
+[node name="FireArmAnimationTree" type="AnimationTree"]
+tree_root = SubResource("AnimationNodeBlendTree_h7mmd")
+parameters/OneShot/active = false
+parameters/OneShot/internal_active = false
+parameters/OneShot/request = 0

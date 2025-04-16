@@ -6,9 +6,10 @@ using Godot;
 
 public partial class Inventory : Node
 {
-    public delegate void ItemlistChangedAction(List<InventoryItem> items, InventoryState inventoryState);
-	public event ItemlistChangedAction ItemlistChanged;
-    public List<InventoryItem> Items {get; private set;} = new();
+    public delegate void ItemlistChangedDelegate(List<Item> items, InventoryState inventoryState);
+	public event ItemlistChangedDelegate ItemlistChanged;
+    public InventoryAnimationEventReporter AnimationEventInformer {get; private set;} = new();
+    public List<Item> Items {get; private set;} = new();
     InventoryState _InventoryState = new();
     BoneAttachment3D _HandAttachment;
     Node3D _OwnerCamNode3D;
@@ -31,7 +32,7 @@ public partial class Inventory : Node
     }
     public void TryAdd(GodotObject item)
     {
-        var invItem = item as InventoryItem;
+        var invItem = item as Item;
         if(invItem is not null)
         {
             Items.Add(invItem);
@@ -72,9 +73,9 @@ public partial class Inventory : Node
     }
     public override void _Process(double delta)
     {
-        foreach(InventoryItem item in Items)
+        foreach(Item item in Items)
         {
-            if(item.PosessionState == InventoryItem.PosessionStateEnum.HOLSTERED)
+            if(item.PosessionState == Item.PosessionStateEnum.HOLSTERED)
                 item.ProcessInternal(delta);
         }
         Debugger.Instance.SetProperty("ActiveItem", _InventoryState.ActiveItems.primary);
@@ -93,15 +94,21 @@ public partial class Inventory : Node
     }
     private void OnHolsterFinished(bool primary)
     {
+        // this needs to be simpler, maybe make some new vars
         if(_InventoryState.TargetItems.primary == -1)
             return;
         _InventoryState.ActiveItems.primary = _InventoryState.TargetItems.primary;
+        Item newCurrentItem = Items[_InventoryState.ActiveItems.primary];
+        InventoryItemAnimationEventReporter[] newCurrentTrees = 
+            new InventoryItemAnimationEventReporter[] {newCurrentItem.AnimationEvents}; //type conversion, fix later
+        AnimationEventInformer.ActiveItemsChanged.Invoke(newCurrentTrees);
         Items[_InventoryState.TargetItems.primary].TryEquip();
         Items[_InventoryState.TargetItems.primary].EquipFinished = null;
         Items[_InventoryState.TargetItems.primary].EquipFinished += OnEquipFinished;
     }
     private void OnEquipFinished(bool primary)
     {
+        // this needs to be simpler
         if(_InventoryState.TargetItems.primary == _InventoryState.ActiveItems.primary)
             return;
         Items[_InventoryState.ActiveItems.primary].TryHolster();

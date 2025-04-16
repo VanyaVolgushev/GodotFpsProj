@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://hm6lrgp5s7so"]
+[gd_scene load_steps=3 format=3 uid="uid://hm6lrgp5s7so"]
 
 [ext_resource type="PackedScene" uid="uid://c0dkmg80xqisp" path="res://assets/plasmapistol_viewmodel.glb" id="1_bf3ol"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1leak"]
+albedo_color = Color(0.779787, 0.12359, 0.165386, 1)
+roughness = 0.35
 
 [node name="plasmapistol" instance=ExtResource("1_bf3ol")]
 
@@ -10,4 +14,6 @@ bones/0/rotation = Quaternion(0.13828, -0.693454, -0.13828, 0.693454)
 bones/1/rotation = Quaternion(-0.00861568, -0.0125049, -0.567272, 0.823391)
 bones/1/scale = Vector3(1, 1, 1)
 bones/2/rotation = Quaternion(-0.00861599, -0.0125051, -0.567272, 0.823391)
-bones/2/scale = Vector3(1, 1, 1)
+
+[node name="Plane_003" parent="plasma/Skeleton3D" index="0"]
+surface_material_override/4 = SubResource("StandardMaterial3D_1leak")

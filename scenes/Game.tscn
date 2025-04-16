@@ -1,14 +1,14 @@
 [gd_scene load_steps=17 format=3 uid="uid://c8j6siaq26ldw"]
 
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_hq5p7"]
-[ext_resource type="PackedScene" uid="uid://crqwm7jgssth5" path="res://scenes/Puppet.tscn" id="1_mp2fq"]
 [ext_resource type="PackedScene" uid="uid://d34b6sxrj03io" path="res://scenes/Floor.tscn" id="3_gf1oa"]
 [ext_resource type="Material" uid="uid://c78gakcmmwffp" path="res://assets/Materials/Concrete1/concrete1.tres" id="4_v0qps"]
 [ext_resource type="PackedScene" uid="uid://dx4dpu6q46pd5" path="res://scenes/ConcreteCube.tscn" id="5_vr8ur"]
 [ext_resource type="Texture2D" uid="uid://dw0nu518o8bbc" path="res://assets/Textures/UI/Previews/cube_outline.png" id="7_4lvjy"]
-[ext_resource type="Script" path="res://scripts/InventoryItem.cs" id="7_r27gv"]
-[ext_resource type="PackedScene" uid="uid://brf3hs0aqy1bf" path="res://scenes/inventory items/plasmapistol.tscn" id="9_8yyp4"]
-[ext_resource type="PackedScene" uid="uid://cjea8f4ie2ca0" path="res://scenes/inventory items/bigpistol.tscn" id="9_a8vi3"]
+[ext_resource type="Script" path="res://scripts/puppet/inventory/Item.cs" id="7_r27gv"]
+[ext_resource type="PackedScene" uid="uid://brf3hs0aqy1bf" path="res://scenes/items/plasmapistol.tscn" id="9_8yyp4"]
+[ext_resource type="PackedScene" uid="uid://cjea8f4ie2ca0" path="res://scenes/items/bigpistol.tscn" id="9_a8vi3"]
+[ext_resource type="PackedScene" uid="uid://blw7p8ke2ux8a" path="res://scenes/DefaultController.tscn" id="9_tsofc"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_rneq0"]
 
@@ -215,9 +215,6 @@ transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75
 layers = 3
 shadow_enabled = true
 
-[node name="Puppet" parent="." instance=ExtResource("1_mp2fq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.86633, 1.03686, 4.86188)
-
 [node name="PickableBox" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0849917, 5.49, 1.49628)
 script = ExtResource("7_r27gv")
@@ -236,5 +233,8 @@ transform = Transform3D(0.586078, -0.320348, 0.744237, -0.48202, 0.600462, 0.638
 
 [node name="Bigpistol" parent="." instance=ExtResource("9_a8vi3")]
 transform = Transform3D(0.721386, 0.381832, -0.577761, -0.692534, 0.397739, -0.601831, 0, 0.834271, 0.551355, 2.5488, 1.72315, 3.45643)
+
+[node name="puppet2" parent="." instance=ExtResource("9_tsofc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.43617, 1.57389, 3.82043)
 
 [editable path="Environment/floor4"]

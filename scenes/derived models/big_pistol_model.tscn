@@ -5,3 +5,10 @@
 [node name="Node3D" type="Node3D"]
 
 [node name="big_pistol" parent="." instance=ExtResource("1_42g52")]
+
+[node name="Skeleton3D" parent="big_pistol/big pistol armature" index="0"]
+bones/0/rotation = Quaternion(0.101352, -0.699805, -0.101352, 0.699805)
+bones/0/scale = Vector3(1, 1, 1)
+bones/1/rotation = Quaternion(4.39708e-08, 2.69837e-08, -0.598453, 0.801158)
+
+[editable path="big_pistol"]

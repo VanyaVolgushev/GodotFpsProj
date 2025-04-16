@@ -27,11 +27,11 @@ public partial class PuppetUI : Control
 		ItemPreview.FlipH = mirror;
 		if(primary)
 		{
-			ItemPreview.Modulate = new Color(2.0f, 0.0f, 0.0f, 1f);
+			ItemPreview.Modulate = new Color(1.0f, 1.0f, 1.0f, 1f);
 		}
 		else
 		{
-			ItemPreview.Modulate = new Color(1.0f, 0.0f, 0.0f, 0.5f);
+			ItemPreview.Modulate = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 		}
 	}
 }
