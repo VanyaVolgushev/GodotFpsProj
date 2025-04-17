@@ -1,16 +1,18 @@
 # Godot Fps
 Custom FPS controller
-![til](./gifs/my corner.gif)
+![til](https://github.com/VanyaVolgushev/GodotFpsProj/blob/main/gifs/my corner.gif)
 
-Default controller
-![til](./gifs/default corner.gif)
+Default Godot controller
+![til](https://github.com/VanyaVolgushev/GodotFpsProj/blob/main/gifs/default corner.gif)
 
 Inventory
-![til](./gifs/inventory demo.gif)
+![til](https://github.com/VanyaVolgushev/GodotFpsProj/blob/main/gifs/inventory demo.gif)
 
 FOV Shader for gun viewmodel (camera and viewmodel have separate FOV)
-![til](./gifs/fov demo.gif)
-![til](./gifs/shooting demo.gif)
+![til](https://github.com/VanyaVolgushev/GodotFpsProj/blob/main/gifs/fov demo.gif)
+![til](https://github.com/VanyaVolgushev/GodotFpsProj/blob/main/gifs/shooting demo.gif)
 
 
 Working as intended™
+
+![til](https://github.com/VanyaVolgushev/GodotFpsProj/blob/main/gifs/as intended.gif)
