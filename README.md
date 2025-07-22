@@ -4,7 +4,7 @@
 Custom FPS controller
 ![til](https://github.com/VanyaVolgushev/GodotFpsProj/blob/main/gifs/my%20corner.gif)
 
-Default Godot controller
+Default Godot controller (slight jitter in corners)
 ![til](https://github.com/VanyaVolgushev/GodotFpsProj/blob/main/gifs/default%20corner.gif)
 
 Inventory
