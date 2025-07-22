@@ -1,4 +1,6 @@
 # Godot Fps
+(GIFs can take a while to load)
+
 Custom FPS controller
 ![til](https://github.com/VanyaVolgushev/GodotFpsProj/blob/main/gifs/my%20corner.gif)
 
